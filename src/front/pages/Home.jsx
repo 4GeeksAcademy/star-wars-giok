@@ -33,20 +33,24 @@ export const Home = () => {
 	}, [])
 
 	return (
-		<div className="text-center mt-5">
-			<h1 className="display-4">Hello Rigo!!</h1>
-			<p className="lead">
-				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
-			</p>
-			<div className="alert alert-info">
-				{store.message ? (
-					<span>{store.message}</span>
-				) : (
-					<span className="text-danger">
-						Loading message from the backend (make sure your python 🐍 backend is running)...
-					</span>
-				)}
-			</div>
-		</div>
-	);
-}; 
+    <div className="home-container">
+      {/* Video de fondo */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="home-video"
+      >
+        <source src="/fondo.mp4" type="video/mp4" />
+        Tu navegador no soporta video en HTML5.
+      </video>
+
+      {/* Contenido encima del video */}
+      <div className="home-overlay">
+        <h1 className="home-title">Bienvenido</h1>
+        <p className="home-subtitle">Aquí comienza tu proyecto 🚀</p>
+      </div>
+    </div>
+  );
+};
