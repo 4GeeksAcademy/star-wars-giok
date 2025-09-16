@@ -1,4 +1,4 @@
-// src/components/Navbar.jsx
+// src/front/components/Navbar.jsx
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LoginModal } from "./LoginModal";
@@ -9,12 +9,20 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Mantener estado de autenticación en cambios de ruta o al cerrar/abrir modal
   useEffect(() => {
     setIsAuthed(Boolean(localStorage.getItem("access_token")));
   }, [showLogin, location.pathname]);
 
-  const handleLoginSuccess = () => {
-    localStorage.setItem("access_token", "fake-token");
+  // Permitir que Register abra este modal con window.dispatchEvent(new Event("openLoginModal"))
+  useEffect(() => {
+    const open = () => setShowLogin(true);
+    window.addEventListener("openLoginModal", open);
+    return () => window.removeEventListener("openLoginModal", open);
+  }, []);
+
+  const handleLoginSuccess = (token) => {
+    if (token) localStorage.setItem("access_token", token);
     setIsAuthed(true);
     setShowLogin(false);
   };
@@ -40,9 +48,9 @@ export const Navbar = () => {
   return (
     <>
       {/* NAVBAR superior */}
-      <nav className="navbar bg-black">
+      <nav className="navbar bg-black text-white" role="navigation" aria-label="Main">
         <div className="container d-flex justify-content-between align-items-center">
-          <Link to="/" className="d-inline-flex align-items-center">
+          <Link to="/" className="d-inline-flex align-items-center" aria-label="Ir al inicio">
             <img src="/logo.png" alt="Logo" className="brand-logo" />
           </Link>
 
@@ -52,44 +60,51 @@ export const Navbar = () => {
               to="/people"
               className={`app-btn ${isActiveAny(["/people"]) ? "is-active" : ""}`}
               title="People"
+              aria-label="People"
             >
               <i className="fa-regular fa-user" />
               <span>People</span>
             </Link>
 
             <Link
-              to="/planetes"
-              className={`app-btn ${isActiveAny(["/planetes"]) ? "is-active" : ""}`}
-              title="Planetes"
+              to="/planets"
+              className={`app-btn ${isActiveAny(["/planets"]) ? "is-active" : ""}`}
+              title="Planets"
+              aria-label="Planets"
             >
               <i className="fa-solid fa-globe" />
-              <span>Planetes</span>
+              <span>Planets</span>
+            </Link>
+
+            <Link
+              to="/vehicles"
+              className={`app-btn ${isActiveAny(["/vehicles"]) ? "is-active" : ""}`}
+              title="Vehicles"
+              aria-label="Vehicles"
+            >
+              <i className="fa-solid fa-shuttle-space" />
+              <span>Vehicles</span>
             </Link>
 
             {isAuthed && (
-              <>
-                <Link
-                  to="/contacts"
-                  className={`app-btn ${isActiveAny(["/contacts"]) ? "is-active" : ""}`}
-                  title="Contacts"
-                >
-                  <i className="fa-regular fa-address-book" />
-                  <span>Contacts</span>
-                </Link>
-
-                <button
-                  className={`app-btn ${isActiveAny(["/favorites"]) ? "is-active" : ""}`}
-                  onClick={handleFavoritesClick}
-                  title="Favoritos"
-                >
-                  <i className="fa-regular fa-star" />
-                  <span>Favoritos</span>
-                </button>
-              </>
+              <button
+                className={`app-btn ${isActiveAny(["/favorites"]) ? "is-active" : ""}`}
+                onClick={handleFavoritesClick}
+                title="Favoritos"
+                aria-label="Favoritos"
+              >
+                <i className="fa-regular fa-star" />
+                <span>Favoritos</span>
+              </button>
             )}
 
             {isAuthed ? (
-              <button className="app-btn" onClick={handleLogout} title="Cerrar sesión">
+              <button
+                className="app-btn"
+                onClick={handleLogout}
+                title="Cerrar sesión"
+                aria-label="Cerrar sesión"
+              >
                 <i className="fa-regular fa-circle-user" />
                 <span>Salir</span>
               </button>
@@ -99,6 +114,7 @@ export const Navbar = () => {
                   to="/register"
                   className={`app-btn ${isActiveAny(["/register"]) ? "is-active" : ""}`}
                   title="Registro"
+                  aria-label="Registro"
                 >
                   <i className="fa-solid fa-user-plus" />
                   <span>Registro</span>
@@ -107,6 +123,7 @@ export const Navbar = () => {
                   className="app-btn"
                   onClick={() => setShowLogin(true)}
                   title="Iniciar sesión"
+                  aria-label="Iniciar sesión"
                 >
                   <i className="fa-solid fa-right-to-bracket" />
                   <span>Login</span>
@@ -118,20 +135,36 @@ export const Navbar = () => {
       </nav>
 
       {/* Dock inferior móvil */}
-      <div className="dock d-md-none bg-black d-flex justify-content-around">
+      <div
+        className="dock d-md-none bg-black d-flex justify-content-around py-2"
+        role="navigation"
+        aria-label="Mobile dock"
+      >
         <Link
           to="/people"
           className={`app-btn ${isActiveAny(["/people"]) ? "is-active" : ""}`}
           title="People"
+          aria-label="People"
         >
           <i className="fa-regular fa-user" />
         </Link>
+
         <Link
-          to="/planetes"
-          className={`app-btn ${isActiveAny(["/planetes"]) ? "is-active" : ""}`}
-          title="Planetes"
+          to="/planets"
+          className={`app-btn ${isActiveAny(["/planets"]) ? "is-active" : ""}`}
+          title="Planets"
+          aria-label="Planets"
         >
           <i className="fa-solid fa-globe" />
+        </Link>
+
+        <Link
+          to="/vehicles"
+          className={`app-btn ${isActiveAny(["/vehicles"]) ? "is-active" : ""}`}
+          title="Vehicles"
+          aria-label="Vehicles"
+        >
+          <i className="fa-solid fa-shuttle-space" />
         </Link>
 
         {isAuthed ? (
@@ -140,17 +173,17 @@ export const Navbar = () => {
               className={`app-btn ${isActiveAny(["/favorites"]) ? "is-active" : ""}`}
               onClick={handleFavoritesClick}
               title="Favoritos"
+              aria-label="Favoritos"
             >
               <i className="fa-regular fa-star" />
             </button>
-            <Link
-              to="/contacts"
-              className={`app-btn ${isActiveAny(["/contacts"]) ? "is-active" : ""}`}
-              title="Contacts"
+
+            <button
+              className="app-btn"
+              onClick={handleLogout}
+              title="Cerrar sesión"
+              aria-label="Cerrar sesión"
             >
-              <i className="fa-regular fa-address-book" />
-            </Link>
-            <button className="app-btn" onClick={handleLogout} title="Cerrar sesión">
               <i className="fa-regular fa-circle-user" />
             </button>
           </>
@@ -160,17 +193,23 @@ export const Navbar = () => {
               to="/register"
               className={`app-btn ${isActiveAny(["/register"]) ? "is-active" : ""}`}
               title="Registro"
+              aria-label="Registro"
             >
               <i className="fa-solid fa-user-plus" />
             </Link>
-            <button className="app-btn" onClick={() => setShowLogin(true)} title="Login">
+            <button
+              className="app-btn"
+              onClick={() => setShowLogin(true)}
+              title="Login"
+              aria-label="Login"
+            >
               <i className="fa-solid fa-right-to-bracket" />
             </button>
           </>
         )}
       </div>
 
-      {/* Modal Login (simulado) */}
+      {/* Modal Login */}
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}

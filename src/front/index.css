@@ -1,59 +1,360 @@
-/* Estilo base para todos los botones de la app */
+/* --- Botones globales --- */
 .app-btn {
-  color: white;              /* color de texto e ícono blanco */
-  font-size: 0.9rem;         /* tamaño estándar */
-  background: transparent;   /* sin fondo */
-  border: none;              /* sin borde */
+  color: #fff;
+  font-size: 0.9rem;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: .6rem;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color .2s, background .2s, border-color .2s, transform .2s;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;              /* espacio entre ícono y texto */
-  text-decoration: none;     /* sin subrayado */
+  gap: .35rem;
+  text-decoration: none;
+  padding: .45rem .85rem;
 }
-
-/* Hover universal */
 .app-btn:hover {
-  color: yellow;             /* cambia a amarillo al pasar */
+  color: #111;
+  background: #ffdd57;
+  border-color: #ffdd57;
+  transform: translateY(-1px);
+}
+.app-btn.is-active { font-weight: 700; }
+
+/* --- Espaciado bajo navbar --- */
+.section {
+  padding-top: 4rem;
+  padding-bottom: 3rem;
+  color: #f5f7ff;
 }
 
-/* Opcional: si quieres que los activos se vean en negrita */
-.app-btn.is-active {
-  font-weight: bold;
+/* --- Grid de cards (1/2/4 columnas) --- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1200px) {
+  .cards-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* Home.jsx */
-.home-container {
+/* --- Card --- */
+.entity-card {
+  background: linear-gradient(180deg, rgba(25,25,30,0.9), rgba(15,15,20,0.95));
+  border: 1px solid #fff;      /* borde blanco */
+  border-radius: .8rem;
+  overflow: hidden;
+  color: #f5f7ff;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.entity-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(255,255,255,0.2);
+}
+
+/* Imagen compacta (vertical) */
+.entity-card__img {
   position: relative;
   width: 100%;
-  height: 100vh;          /* pantalla completa */
-  overflow: hidden;
+  aspect-ratio: 3 / 5;
+  background: #0f1116;
 }
-
-.home-video {
-  position: absolute;
-  top: 0;
-  left: 0;
+.entity-card__img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;       /* el video cubre todo */
-  z-index: -1;            /* queda detrás del contenido */
+  object-fit: cover;
+}
+.entity-card__img--placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #9aa0b4;
+  font-size: .95rem;
 }
 
-.home-overlay {
+/* Estrella favoritos */
+.favorite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.55);
+  color: #eee;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform .2s ease, color .2s ease;
+}
+.favorite-btn:hover { color: #ffdd57; transform: scale(1.1); }
+.favorite-btn.active { color: #ffc107; transform: scale(1.15); }
+
+/* Body card */
+.entity-card__body {
+  padding: .75rem .9rem 1rem;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .2rem;
+}
+.entity-card__header .muted {
+  color: #c0c3ce;
+  font-size: .8rem;
+}
+
+/* Lista de atributos */
+.entity-card__list {
+  list-style: none;
+  margin: .5rem 0 .75rem;
+  padding: 0;
+}
+.entity-card__row {
+  display: flex;
+  justify-content: space-between;
+  padding: .25rem 0;
+  border-bottom: 1px dashed rgba(255,255,255,0.15);
+  font-size: .85rem;
+}
+.entity-card__row:last-child { border-bottom: none; }
+.entity-card__row .label { color: #c9cbd3; }
+.entity-card__row .value { color: #fff; font-weight: 600; }
+
+/* Botón más info reducido */
+.entity-card__actions { margin-top: .25rem; }
+.entity-card__actions .app-btn {
+  font-size: .8rem;
+  padding: .3rem .6rem;
+}
+
+/* Panel "Más info" */
+.entity-card__more {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease, padding-top .3s ease;
+  font-size: .85rem;
+}
+.entity-card__more.is-open {
+  max-height: 220px;
+  padding-top: .5rem;
+  color: #ddd;
+}
+
+/* ===== Video de fondo global ===== */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  z-index: -2;              /* detrás de todo */
+  pointer-events: none;     /* no bloquea clics */
+}
+.bg-video__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bg-video__overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(transparent 40%, rgba(0,0,0,0.35) 100%),
+              linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.55));
+  z-index: -1;
+}
+
+/* ===== Shell para sticky footer ===== */
+.app-shell {
   position: relative;
-  z-index: 1;
-  color: white;
-  text-align: center;
-  top: 50%;
-  transform: translateY(-50%);
+  z-index: 0;               /* por encima del video */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.app-main {
+  flex: 1 1 auto;           /* empuja el footer al fondo */
+}
+footer {
+  margin-top: auto;
 }
 
-.home-title {
-  font-size: 3rem;
-  font-weight: bold;
+
+.skeleton {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 250px;
 }
 
-.home-subtitle {
-  font-size: 1.5rem;
+
+/* --- Card Detail --- */
+.card.entity-card {
+  background: linear-gradient(180deg, rgba(25, 25, 30, 0.9), rgba(15, 15, 20, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.8rem;
+  color: #f5f7ff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s;
+  max-width: 850px;       /* 🔹 más pequeña y centrada */
+  margin: 0 auto;         /* centrar en la pantalla */
 }
+.card.entity-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.25);
+}
+
+/* ⭐ Resaltado dorado si está en favoritos */
+.card.entity-card.fav-active {
+  border-color: #ffc107;
+  box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+}
+
+/* Imagen detalle */
+.entity-card__img {
+  width: 100%;
+  aspect-ratio: 3 / 4;     /* 🔹 más vertical y compacta */
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #0f1116;
+  position: relative;
+}
+.entity-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: #1c1e26;
+  border-radius: 0.5rem;
+}
+
+/* Lista de atributos */
+.entity-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.entity-card__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+.entity-card__row:last-child {
+  border-bottom: none;
+}
+.entity-card__row .label {
+  color: #c0c3ce;
+  font-weight: 500;
+}
+.entity-card__row .value {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Botón favoritos (detalle) */
+.favorite-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  font-size: 1.2rem;
+  color: #eee;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.favorite-btn:hover {
+  color: #ffdd57;
+  transform: scale(1.1);
+}
+.favorite-btn.active {
+  color: #ffc107;
+  background: rgba(0, 0, 0, 0.65);
+  transform: scale(1.15);
+}
+
+
+/* ===== Modal mejorado ===== */
+.app-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+.app-modal {
+  width: 100%;
+  max-width: 420px;
+  background: #0e0f14;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 1rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 1rem 1rem 1.25rem;
+  position: relative;
+}
+.app-modal__close {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  background: transparent;
+  border: none;
+  color: #bbb;
+  font-size: 1.1rem;
+}
+.app-modal__close:hover { color: #ffdd57; }
+.app-modal__header {
+  padding: .25rem .25rem .5rem;
+  border-bottom: 1px dashed rgba(255,255,255,0.12);
+  margin-bottom: 1rem;
+}
+.app-modal__body { padding: 0 .25rem; }
+
+/* ===== Card de formularios (Register) ===== */
+.app-card.form-card {
+  width: 100%;
+  max-width: 520px;
+  background: #0e0f14;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 1rem;
+  color: #fff;
+  padding: 1.25rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.link-accent {
+  color: #ffdd57;
+  font-weight: 500;
+  text-decoration: none;
+}
+.link-accent:hover {
+  text-decoration: underline;
+}
+
+/* variante de botón a ancho completo para formularios */
+.app-btn.block {
+  width: 100%;
+  justify-content: center;
+}
+
+/* link acentuado para los cross-links */
+.link-accent {
+  color: #ffdd57;
+  font-weight: 500;
+  text-decoration: none;
+}
+.link-accent:hover { text-decoration: underline; }

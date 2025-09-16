@@ -1,56 +1,38 @@
-import React, { useEffect } from "react"
+// src/front/pages/Home.jsx
+import React, { useEffect } from "react";
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 
 export const Home = () => {
+  const { store, dispatch } = useGlobalReducer();
 
-	const { store, dispatch } = useGlobalReducer()
+  const loadMessage = async () => {
+    try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      if (!backendUrl) return; // ✅ no hay backend, no hacemos fetch
 
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
+      const response = await fetch(backendUrl + "/api/hello");
+      const data = await response.json();
 
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
+      if (response.ok) dispatch({ type: "set_hello", payload: data.message });
+      return data;
+    } catch (error) {
+      // Mantengo tu manejo, pero evito romper la UI
+      console.warn(
+        "No se pudo obtener el mensaje del backend. ¿Está corriendo y accesible?"
+      );
+    }
+  };
 
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
+  useEffect(() => {
+    loadMessage();
+  }, []);
 
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
-
-			return data
-
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
-		}
-
-	}
-
-	useEffect(() => {
-		loadMessage()
-	}, [])
-
-	return (
-    <div className="home-container">
-      {/* Video de fondo */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="home-video"
-      >
-        <source src="/fondo.mp4" type="video/mp4" />
-        Tu navegador no soporta video en HTML5.
-      </video>
-
-      {/* Contenido encima del video */}
-      <div className="home-overlay">
-        <h1 className="home-title">Bienvenido</h1>
-        <p className="home-subtitle">Aquí comienza tu proyecto 🚀</p>
-      </div>
+  return (
+    <div className="container section text-center">
+      <h1 className="home-title">Bienvenido</h1>
+      <p className="home-subtitle"> comienza tu proyecto 🚀</p>
+      {/* Aquí podrás añadir tus cards o contenido */}
     </div>
   );
 };
