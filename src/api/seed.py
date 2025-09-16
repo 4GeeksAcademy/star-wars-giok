@@ -70,5 +70,5 @@ def run_seed():
     print("✅ Seed completado con éxito.")
 
 if __name__ == "__main__":
-    with app.app_context():                         # ✅ contexto de la MISMA app
+    with app.app_context():                        
         run_seed()

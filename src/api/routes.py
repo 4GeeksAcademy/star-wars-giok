@@ -70,7 +70,7 @@ def login():
         return jsonify({"msg": "invalid email or password"}), 400
 
     # ✅ identity como int
-    token = create_access_token(identity=int(user.id))
+    token = create_access_token(identity=str(user.id))  # ✅ string
     return jsonify({"msg": "logged", "token": token}), 200
 
 

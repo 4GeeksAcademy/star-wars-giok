@@ -358,3 +358,114 @@ footer {
   text-decoration: none;
 }
 .link-accent:hover { text-decoration: underline; }
+
+/* Hero con video de fondo */
+.hero {
+  position: relative;
+  min-height: 100vh;         /* pantalla completa */
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* recorta para cubrir */
+  z-index: 0;                 /* detrás de todo */
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35); /* oscurece un poco para contraste */
+  z-index: 1;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;                 /* por encima del video/overlay */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 6rem;        /* espacio vertical */
+  min-height: 100vh;
+}
+
+/* Iconos grandes tipo menú */
+.hero__icon-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  text-decoration: none;
+  color: #fff;
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.hero__icon-link:hover {
+  transform: translateY(-4px);
+  opacity: .9;
+}
+
+.hero__icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+
+.hero__icon i {
+  font-size: 44px;
+}
+
+/* Responsive pequeño */
+@media (max-width: 576px) {
+  .hero__icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+  }
+  .hero__icon i {
+    font-size: 36px;
+  }
+}
+
+.hero__logo {
+  max-width: 360px;
+  width: 80%;
+  height: auto;
+}
+
+.hero__tagline {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: #f5f5f5;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+/* Iconos más grandes */
+.hero__icon.hero__icon--xl {
+  width: 120px;
+  height: 120px;
+  border-radius: 30px;
+}
+
+.hero__icon.hero__icon--xl i {
+  font-size: 56px;
+}
+
+.hero__label {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+
+
